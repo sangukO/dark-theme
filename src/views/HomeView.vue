@@ -1,6 +1,6 @@
 <template>
   <main>
-    <div class="w-full h-full">
+    <div class="w-full h-full bg-inherit" :class="darkMode ? 'bg-[#212529]' : 'bg-white'">
       <div class="flex-row-reverse py-10 px-10 flex">
         <input
           type="checkbox"
@@ -10,8 +10,15 @@
           v-model="negatedDarkMode"
         />
       </div>
-      <div class="flex justify-center items-center">
-        <span>Hello World</span>
+    </div>
+    <div
+      class="flex justify-center items-center flex-col"
+      :class="darkMode ? 'bg-[#212529]' : 'bg-white'"
+    >
+      <div class="nes-container with-title" :class="darkMode ? 'is-dark' : ''">
+        <p class="title">Container.is-dark</p>
+        <p>Good morning. Thou hast had a good night's sleep, I hope.</p>
+        <p>환영합니다. 좋은 아침입니다.</p>
       </div>
     </div>
   </main>

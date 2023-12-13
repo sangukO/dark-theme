@@ -6,6 +6,7 @@ import router from './router'
 
 import '@assets/base.css'
 import '@assets/tailwind.css'
+import 'nes.css/css/nes.min.css'
 
 const app = createApp(App)
 
