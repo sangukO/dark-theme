@@ -1,0 +1,73 @@
+:root {
+  --main-color-50: #f2e7fe;
+  --main-color-100: #d7b7fd;
+  --main-color-200: #bb86fc;
+  --main-color-300: #9e55fc;
+  --main-color-400: #7f22fd;
+  --main-color-500: #6200ee;
+  --main-color-600: #4b00d1;
+  --main-color-700: #3700b3;
+  --main-color-800: #270096;
+  --main-color-900: #190078;
+  --main-color-dark: #1f1b24;
+  --main-opacity-full: 100% --main-opacity-high: 87%;
+  --main-opacity-medium: 60%;
+  --main-opacity-disabled: 38%;
+  --main-opacity-card: 5%;
+}
+
+:root[color-theme='dark'] {
+  --main-text-color: #fff;
+  --main-background-color: #121212;
+  --main-color: #bb86fc;
+  --main-error-color: #cf6679;
+  --main-opacity: var(--main-opacity-high, 87%);
+}
+
+:root[color-theme='light'] {
+  --main-text-color: #000;
+  --main-background-color: #fff;
+  --main-color: #6200ee;
+  --main-opacity: var(--main-opacity-full, 100%);
+  --main-error-color: #b00020;
+}
+
+:root {
+  background-color: var(--main-background-color, #121212);
+  color: var(--main-text-color, #fff);
+  opacity: var(--main-opacity, 87%);
+}
+
+.toggle-theme {
+  appearance: none;
+  position: relative;
+  border: max(2px, 0.1em) solid gray;
+  border-radius: 2.5em;
+  width: 4.5em;
+  height: 2.5em;
+}
+
+.toggle-theme::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  bottom: 2px;
+  width: 2em;
+  height: 2em;
+  transform: scale(0.9);
+  background-image: url('@assets/icons/ic_dark_mode.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  transition: left 250ms linear;
+}
+
+.toggle-theme:checked::before {
+  background-image: url('@assets/icons/ic_light_mode.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  left: 2em;
+}
+
+.toggle-theme:checked {
+  background-color: white;
+}
