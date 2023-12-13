@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 :root {
   --main-color-50: #f2e7fe;
   --main-color-100: #d7b7fd;
@@ -10,7 +12,8 @@
   --main-color-800: #270096;
   --main-color-900: #190078;
   --main-color-dark: #1f1b24;
-  --main-opacity-full: 100% --main-opacity-high: 87%;
+  --main-opacity-full: 100%;
+  --main-opacity-high: 87%;
   --main-opacity-medium: 60%;
   --main-opacity-disabled: 38%;
   --main-opacity-card: 5%;
@@ -18,7 +21,7 @@
 
 :root[color-theme='dark'] {
   --main-text-color: #fff;
-  --main-background-color: #121212;
+  --main-background-color: rgb(18, 18, 18);
   --main-color: #bb86fc;
   --main-error-color: #cf6679;
   --main-opacity: var(--main-opacity-high, 87%);
@@ -36,13 +39,18 @@
   background-color: var(--main-background-color, #121212);
   color: var(--main-text-color, #fff);
   opacity: var(--main-opacity, 87%);
+  font-family: 'Press Start 2P';
 }
 
 .toggle-theme {
   appearance: none;
   position: relative;
-  border: max(2px, 0.1em) solid gray;
-  border-radius: 2.5em;
+  border-image-slice: 2;
+  border-image-width: 2;
+  border-image-outset: 2;
+  border-style: solid;
+  border-width: 4px;
+  border-image-source: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8" ?><svg version="1.1" width="5" height="5" xmlns="http://www.w3.org/2000/svg"><path d="M2 1 h1 v1 h-1 z M1 2 h1 v1 h-1 z M3 2 h1 v1 h-1 z M2 3 h1 v1 h-1 z" fill="rgba(255,255,255, .87)" /></svg>');
   width: 4.5em;
   height: 2.5em;
 }
@@ -50,8 +58,7 @@
 .toggle-theme::before {
   content: '';
   position: absolute;
-  left: 2px;
-  bottom: 2px;
+  left: 0;
   width: 2em;
   height: 2em;
   transform: scale(0.9);
@@ -70,4 +77,5 @@
 
 .toggle-theme:checked {
   background-color: white;
+  border-image-source: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8" ?><svg version="1.1" width="5" height="5" xmlns="http://www.w3.org/2000/svg"><path d="M2 1 h1 v1 h-1 z M1 2 h1 v1 h-1 z M3 2 h1 v1 h-1 z M2 3 h1 v1 h-1 z" fill="rgb(18,18,18)" /></svg>');
 }

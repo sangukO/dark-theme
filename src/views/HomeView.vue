@@ -1,13 +1,18 @@
 <template>
   <main>
-    <div class="w-full h-full flex flex-row-reverse py-10 px-10">
-      <input
-        type="checkbox"
-        role="switch"
-        class="toggle-theme"
-        id="toggle-theme"
-        v-model="negatedDarkMode"
-      />
+    <div class="w-full h-full">
+      <div class="flex-row-reverse py-10 px-10 flex">
+        <input
+          type="checkbox"
+          role="switch"
+          class="toggle-theme"
+          id="toggle-theme"
+          v-model="negatedDarkMode"
+        />
+      </div>
+      <div class="flex justify-center items-center">
+        <span>Hello World</span>
+      </div>
     </div>
   </main>
 </template>
