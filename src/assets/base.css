@@ -51,6 +51,12 @@
 
 body {
   font-family: 'Press Start 2P', 'neodgm' !important;
+  font-size: 16px;
+  color: var(--main-text-color, #fff);
+}
+div {
+  color: var(--main-text-color);
+  background-color: var(--main-background-color);
 }
 
 .toggle-theme {
@@ -93,7 +99,16 @@ body {
 
 .nes-container.is-dark {
   background-color: #212529 !important;
-  p {
-    background-color: #212529 !important;
-  }
+}
+
+.nes-container.is-dark > p {
+  background-color: #212529 !important;
+}
+
+.drag-prevent {
+  -ms-user-select: none;
+  -moz-user-select: -none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }
