@@ -18,8 +18,8 @@
         <span class="title !text-4xl !mt-[-45px]">봇</span>
         <!-- <p class="mt-5 !text-2xl sentence1">안녕하세요. 좋은 {{ wordVariable.time }}입니다.</p> -->
         <p class="mt-5 !text-2xl">{{ sentence1 }}</p>
-        <p class="!text-2xl sentence2">저에게 오세요.</p>
-        <p class="!text-2xl sentence3">{{ wordVariable.food }} 추천을 해드리겠습니다.</p>
+        <p class="!text-2xl sentence2">{{ sentence2 }}</p>
+        <p class="!text-2xl sentence3">{{ sentence3 }}</p>
       </div>
       <transition name="pick">
         <div v-if="picked === ''" class="pt-8 flex gap-x-20">
@@ -59,9 +59,13 @@ const formattedTime = useDateFormat(useNow(), 'YYYY-MM-DD HH:mm:ss')
 const now = useTimestamp()
 const nowHMS = ref(now.value - todayMidnight.value.setHours(0, 0, 0, 0))
 const picked = ref('')
-const sentence1 = ref('안녕하세요')
+const wordVariable = ref(updateWordVariable())
 
-const updateWordVariable = () => {
+const sentence1 = ref(`안녕하세요 좋은 ${wordVariable.value.time}입니다.`)
+const sentence2 = ref(`저에게 오세요.`)
+const sentence3 = ref(`${wordVariable.value.food} 추천을 해드리겠습니다.`)
+
+function updateWordVariable() {
   if (nowHMS.value > 0 && nowHMS.value <= 7200000) {
     // 0~3
     return { time: '밤', food: '야식' }
@@ -88,15 +92,12 @@ const updateWordVariable = () => {
   }
 }
 
-const wordVariable = ref(updateWordVariable())
-
 watch(now, () => {
   nowHMS.value = now.value - todayMidnight.value.setHours(0, 0, 0, 0)
   updateWordVariable()
 })
 
 watch(picked, async (to) => {
-  console.log(picked.value, to)
   await nextTick()
   sentence1.value = '감사합니다.'
 })
@@ -110,14 +111,14 @@ const negatedDarkMode = computed({
   }
 })
 
-const getInitialTheme = () => {
+function getInitialTheme() {
   if (localStorage.getItem('isDarkMode') === 'false') {
     return false
   }
   return true
 }
 
-const savePreference = (isDarkMode) => {
+function savePreference(isDarkMode) {
   localStorage.setItem('isDarkMode', isDarkMode)
 }
 
