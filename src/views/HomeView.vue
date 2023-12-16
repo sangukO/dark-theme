@@ -14,12 +14,14 @@
     </div>
 
     <div class="flex items-center flex-col h-[calc(100vh-145px)] pt-40">
-      <div class="nes-container with-title w-[40%]" :class="darkMode ? 'is-dark' : ''">
-        <span class="title !text-4xl !mt-[-45px]">봇</span>
-        <!-- <p class="mt-5 !text-2xl sentence1">안녕하세요. 좋은 {{ wordVariable.time }}입니다.</p> -->
-        <p class="mt-5 !text-2xl">{{ sentence1 }}</p>
-        <p class="!text-2xl sentence2">{{ sentence2 }}</p>
-        <p class="!text-2xl sentence3">{{ sentence3 }}</p>
+      <div
+        class="nes-container with-title w-[80%] max-w-[520px]"
+        :class="darkMode ? 'is-dark' : ''"
+      >
+        <span class="title !text-4xl !mt-[-3rem]">봇</span>
+        <p class="mt-5">{{ sentence1 }}</p>
+        <p class="sentence2">{{ sentence2 }}</p>
+        <p class="sentence3">{{ sentence3 }}</p>
       </div>
       <transition name="pick">
         <div v-if="picked === ''" class="pt-8 flex gap-x-20">
