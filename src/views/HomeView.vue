@@ -69,10 +69,10 @@ const sentence2 = ref(`저에게 오세요.`)
 const sentence3 = ref(`${wordVariable.value.food} 추천을 해드리겠습니다.`)
 
 function updateWordVariable() {
-  if (nowHMS.value > 0 && nowHMS.value <= 25200000) {
+  if (nowHMS.value > 0 && nowHMS.value <= 10200000) {
     // 0~7
     return { time: '새벽', food: '야식' }
-  } else if (nowHMS.value > 25200000 && nowHMS.value <= 43200000) {
+  } else if (nowHMS.value > 10200000 && nowHMS.value <= 43200000) {
     // 7~12
     return { time: '아침', food: '아침 식사' }
   } else if (nowHMS.value > 43200000 && nowHMS.value <= 50400000) {
