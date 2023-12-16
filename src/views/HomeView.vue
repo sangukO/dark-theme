@@ -10,6 +10,7 @@
       />
       <p class="flex items-center mb-0 !text-3xl">
         {{ formattedTime }}
+        {{ nowHMS }}
       </p>
     </div>
 
@@ -68,14 +69,11 @@ const sentence2 = ref(`저에게 오세요.`)
 const sentence3 = ref(`${wordVariable.value.food} 추천을 해드리겠습니다.`)
 
 function updateWordVariable() {
-  if (nowHMS.value > 0 && nowHMS.value <= 7200000) {
-    // 0~3
-    return { time: '밤', food: '야식' }
-  } else if (nowHMS.value > 7200000 && nowHMS.value <= 21600000) {
-    // 3~6
+  if (nowHMS.value > 0 && nowHMS.value <= 25200000) {
+    // 0~7
     return { time: '새벽', food: '야식' }
-  } else if (nowHMS.value > 21600000 && nowHMS.value <= 43200000) {
-    // 6~12
+  } else if (nowHMS.value > 25200000 && nowHMS.value <= 43200000) {
+    // 7~12
     return { time: '아침', food: '아침 식사' }
   } else if (nowHMS.value > 43200000 && nowHMS.value <= 50400000) {
     // 12~14
