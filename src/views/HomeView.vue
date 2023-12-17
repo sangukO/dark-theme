@@ -10,7 +10,7 @@
       />
       <p class="flex items-center mb-0 !text-3xl">
         {{ formattedTime }}
-        <!-- {{ nowHMS }} -->
+        {{ nowHMS }}
       </p>
     </div>
 
@@ -34,6 +34,7 @@
               value="Y"
               v-model="picked"
               :disabled="picked != ''"
+              @click="progress = 1"
             />
             <span>좋아</span>
           </label>
@@ -56,6 +57,9 @@
 <script setup>
 import { ref, onBeforeMount, computed, watch, onMounted, nextTick } from 'vue'
 import { useDateFormat, useNow, useTimestamp } from '@vueuse/core'
+// const sentence1 = ref(`안녕하세요 좋은 ${wordVariable.value.time}입니다.`)
+// const sentence2 = ref(`저에게 오세요.`)
+// const sentence3 = ref(`${wordVariable.value.food} 추천을 해드리겠습니다.`)
 const darkMode = ref(true)
 const todayMidnight = ref(new Date())
 const formattedTime = useDateFormat(useNow(), 'YYYY-MM-DD HH:mm:ss')
@@ -63,10 +67,7 @@ const now = useTimestamp()
 const nowHMS = ref(now.value - todayMidnight.value.setHours(0, 0, 0, 0))
 const picked = ref('')
 const wordVariable = ref(updateWordVariable())
-
-const sentence1 = ref(`안녕하세요 좋은 ${wordVariable.value.time}입니다.`)
-const sentence2 = ref(`저에게 오세요.`)
-const sentence3 = ref(`${wordVariable.value.food} 추천을 해드리겠습니다.`)
+const progress = ref(0)
 
 function updateWordVariable() {
   if (nowHMS.value > 0 && nowHMS.value <= 25200000) {
@@ -81,7 +82,7 @@ function updateWordVariable() {
   } else if (nowHMS.value > 50400000 && nowHMS.value <= 61200000) {
     // 14~17
     return { time: '오후', food: '간식' }
-  } else if (nowHMS.value > 61200000 && nowHMS.value <= 75600000) {
+  } else if (nowHMS.value > 61200000 && nowHMS.value <= 72670000) {
     // 17~21
     return { time: '저녁', food: '저녁 식사' }
   } else if (nowHMS.value > 75600000 && nowHMS.value <= 86400000) {
@@ -100,6 +101,30 @@ watch(now, () => {
 watch(picked, async (to) => {
   await nextTick()
   sentence1.value = '감사합니다.'
+})
+
+const sentence1 = computed(() => {
+  if (progress.value === 0) {
+    return `안녕하세요 좋은 ${wordVariable.value.time}입니다.`
+  } else if (progress.value === 1) {
+    return `감사합니다.`
+  }
+})
+
+const sentence2 = computed(() => {
+  if (progress.value === 0) {
+    return `저에게 오세요.`
+  } else if (progress.value === 1) {
+    return `그럼 진행하겠습니다.`
+  }
+})
+
+const sentence3 = computed(() => {
+  if (progress.value === 0) {
+    return `${wordVariable.value.food} 추천을 해드리겠습니다.`
+  } else if (progress.value === 1) {
+    return `다음 질문을 드리겠습니다.`
+  }
 })
 
 const negatedDarkMode = computed({
