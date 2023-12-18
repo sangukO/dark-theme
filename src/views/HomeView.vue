@@ -19,12 +19,15 @@
       <img src="@assets/image/Chars1.svg" class="w-[calc(40vw+5px)] max-w-[250px]" />
     </div>
     <div class="flex justify-center items-center flex-col h-[calc(100vh-145px)]">
-      <Conversation
-        :s1="sentence1"
-        :s2="sentence2"
-        :s3="sentence3"
-        :isDarkMode="darkMode"
-      ></Conversation>
+      <div
+        class="nes-container with-title w-[80%] max-w-[1000px] min-h-[148px]"
+        :class="darkMode ? 'is-dark' : ''"
+      >
+        <span class="title !text-[3.2rem] !mt-[-4rem]">음식 추천 봇</span>
+        <!-- <vue-typed-js v-if="strArr" :strings="strArr">
+          <p class="typing"></p>
+        </vue-typed-js> -->
+      </div>
       <div class="pt-8 h-[50px]">
         <transition name="pick">
           <div v-if="picked === ''" class="flex gap-x-20">
@@ -60,9 +63,9 @@
   </main>
 </template>
 <script setup>
-import { ref, onBeforeMount, computed, watch, onMounted, nextTick } from 'vue'
+import { ref, onBeforeMount, computed, watch, nextTick } from 'vue'
 import { useDateFormat, useNow, useTimestamp } from '@vueuse/core'
-import Conversation from '@components/pages/home/Conversation.vue'
+// import Conversation from '@components/pages/home/Conversation.vue'
 // import { progress, increment } from '@stores/status.js'
 const darkMode = ref(true)
 const todayMidnight = ref(new Date())
@@ -95,6 +98,7 @@ const wordVariable = computed(() => {
     return { time: '날', food: '음식' }
   }
 })
+const strArr = ['123', '456', '789']
 
 watch(picked, async (to) => {
   await nextTick()
