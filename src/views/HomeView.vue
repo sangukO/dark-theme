@@ -1,6 +1,9 @@
 <template>
-  <main class="w-[100vw] h-[100vh]">
-    <div class="flex justify-between flex-row-reverse py-10 px-10">
+  <main class="w-[100vw] h-[100vh] relative">
+    <div class="flex justify-between py-10 px-10">
+      <p class="flex items-center mb-0 !text-3xl">
+        {{ formattedTime }}
+      </p>
       <input
         type="checkbox"
         role="switch"
@@ -8,94 +11,89 @@
         id="toggle-theme"
         v-model="negatedDarkMode"
       />
-      <p class="flex items-center mb-0 !text-3xl">
-        {{ formattedTime }}
-        {{ nowHMS }}
-      </p>
     </div>
-
-    <div class="flex items-center flex-col h-[calc(100vh-145px)] pt-40">
-      <div
-        class="nes-container with-title w-[80%] max-w-[520px]"
-        :class="darkMode ? 'is-dark' : ''"
-      >
-        <span class="title !text-4xl !mt-[-3rem]">봇</span>
-        <p class="mt-5">{{ sentence1 }}</p>
-        <p class="sentence2">{{ sentence2 }}</p>
-        <p class="sentence3">{{ sentence3 }}</p>
+    <div class="images absolute top-[100px]">
+      <img src="@assets/image/Chars.svg" class="w-[calc(40vw+5px)] max-w-[300px]" />
+    </div>
+    <div class="images absolute bottom-0 right-0">
+      <img src="@assets/image/Chars1.svg" class="w-[calc(40vw+5px)] max-w-[300px]" />
+    </div>
+    <div class="flex justify-center items-center flex-col h-[calc(100vh-145px)]">
+      <Conversation
+        :s1="sentence1"
+        :s2="sentence2"
+        :s3="sentence3"
+        :isDarkMode="darkMode"
+      ></Conversation>
+      <div class="pt-8 h-[50px]">
+        <transition name="pick">
+          <div v-if="picked === ''" class="flex gap-x-20">
+            <label>
+              <input
+                type="radio"
+                class="nes-radio"
+                :class="darkMode ? 'is-dark' : ''"
+                name="answer-dark"
+                value="Y"
+                v-model="picked"
+                :disabled="picked != ''"
+                @click="progress++"
+              />
+              <span>좋아</span>
+            </label>
+            <label>
+              <input
+                type="radio"
+                class="nes-radio"
+                :class="darkMode ? 'is-dark' : ''"
+                name="answer-dark"
+                value="N"
+                v-model="picked"
+                :disabled="picked != ''"
+              />
+              <span>싫어</span>
+            </label>
+          </div>
+        </transition>
       </div>
-      <transition name="pick">
-        <div v-if="picked === ''" class="pt-8 flex gap-x-20">
-          <label>
-            <input
-              type="radio"
-              class="nes-radio is-dark"
-              name="answer-dark"
-              value="Y"
-              v-model="picked"
-              :disabled="picked != ''"
-              @click="progress = 1"
-            />
-            <span>좋아</span>
-          </label>
-          <label>
-            <input
-              type="radio"
-              class="nes-radio is-dark"
-              name="answer-dark"
-              value="N"
-              v-model="picked"
-              :disabled="picked != ''"
-            />
-            <span>싫어</span>
-          </label>
-        </div>
-      </transition>
     </div>
   </main>
 </template>
 <script setup>
 import { ref, onBeforeMount, computed, watch, onMounted, nextTick } from 'vue'
 import { useDateFormat, useNow, useTimestamp } from '@vueuse/core'
-// const sentence1 = ref(`안녕하세요 좋은 ${wordVariable.value.time}입니다.`)
-// const sentence2 = ref(`저에게 오세요.`)
-// const sentence3 = ref(`${wordVariable.value.food} 추천을 해드리겠습니다.`)
+import Conversation from '@components/pages/home/Conversation.vue'
+// import { progress, increment } from '@stores/status.js'
 const darkMode = ref(true)
 const todayMidnight = ref(new Date())
 const formattedTime = useDateFormat(useNow(), 'YYYY-MM-DD HH:mm:ss')
 const now = useTimestamp()
-const nowHMS = ref(now.value - todayMidnight.value.setHours(0, 0, 0, 0))
+const nowHMS = computed(() => now.value - todayMidnight.value.setHours(0, 0, 0, 0))
 const picked = ref('')
-const wordVariable = ref(updateWordVariable())
 const progress = ref(0)
-
-function updateWordVariable() {
-  if (nowHMS.value > 0 && nowHMS.value <= 25200000) {
+const wordVariable = computed(() => {
+  const cloneNowHMS = nowHMS.value
+  if (cloneNowHMS > 0 && cloneNowHMS <= 25200000) {
     // 0~7
     return { time: '새벽', food: '야식' }
-  } else if (nowHMS.value > 25200000 && nowHMS.value <= 43200000) {
+  } else if (cloneNowHMS > 25200000 && cloneNowHMS <= 43200000) {
     // 7~12
     return { time: '아침', food: '아침 식사' }
-  } else if (nowHMS.value > 43200000 && nowHMS.value <= 50400000) {
+  } else if (cloneNowHMS > 43200000 && cloneNowHMS <= 50400000) {
     // 12~14
     return { time: '낮', food: '점심 식사' }
-  } else if (nowHMS.value > 50400000 && nowHMS.value <= 61200000) {
+  } else if (cloneNowHMS > 50400000 && cloneNowHMS <= 61200000) {
     // 14~17
     return { time: '오후', food: '간식' }
-  } else if (nowHMS.value > 61200000 && nowHMS.value <= 72670000) {
+  } else if (cloneNowHMS > 61200000 && cloneNowHMS <= 72670000) {
     // 17~21
     return { time: '저녁', food: '저녁 식사' }
-  } else if (nowHMS.value > 75600000 && nowHMS.value <= 86400000) {
+  } else if (cloneNowHMS > 75600000 && cloneNowHMS <= 86400000) {
     // 21~0
     return { time: '밤', food: '야식' }
   } else {
     return { time: '날', food: '음식' }
   }
-}
-
-watch(now, () => {
-  nowHMS.value = now.value - todayMidnight.value.setHours(0, 0, 0, 0)
-  updateWordVariable()
 })
 
 watch(picked, async (to) => {
@@ -103,28 +101,37 @@ watch(picked, async (to) => {
   sentence1.value = '감사합니다.'
 })
 
-const sentence1 = computed(() => {
-  if (progress.value === 0) {
-    return `안녕하세요 좋은 ${wordVariable.value.time}입니다.`
-  } else if (progress.value === 1) {
-    return `감사합니다.`
-  }
+const sentence1 = computed({
+  get() {
+    if (progress.value === 0) {
+      return `안녕하세요 좋은 ${wordVariable.value.time}입니다.`
+    } else if (progress.value === 1) {
+      return `감사합니다.`
+    }
+  },
+  set() {}
 })
 
-const sentence2 = computed(() => {
-  if (progress.value === 0) {
-    return `저에게 오세요.`
-  } else if (progress.value === 1) {
-    return `그럼 진행하겠습니다.`
-  }
+const sentence2 = computed({
+  get() {
+    if (progress.value === 0) {
+      return `저에게 오세요.`
+    } else if (progress.value === 1) {
+      return `그럼 진행하겠습니다.`
+    }
+  },
+  set() {}
 })
 
-const sentence3 = computed(() => {
-  if (progress.value === 0) {
-    return `${wordVariable.value.food} 추천을 해드리겠습니다.`
-  } else if (progress.value === 1) {
-    return `다음 질문을 드리겠습니다.`
-  }
+const sentence3 = computed({
+  get() {
+    if (progress.value === 0) {
+      return `${wordVariable.value.food} 추천을 해드리겠습니다.`
+    } else if (progress.value === 1) {
+      return `다음 질문을 드리겠습니다.`
+    }
+  },
+  set() {}
 })
 
 const negatedDarkMode = computed({
