@@ -47,8 +47,19 @@ html {
   font-size: 62.5% !important;
 }
 
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+#app {
+  overflow: hidden;
+}
+
 * {
-  font-family: 'neodgm';
+  font-family: 'neodgm' !important;
   background-color: var(--main-background-color, #212529) !important;
   color: var(--main-text-color, #fff) !important;
   /* opacity: var(--main-opacity, 87%); */

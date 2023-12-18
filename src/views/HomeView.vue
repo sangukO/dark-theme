@@ -1,5 +1,5 @@
 <template>
-  <main class="w-[100vw] h-[100vh] relative">
+  <main class="w-[100%] h-[100%] relative">
     <div class="flex justify-between py-10 px-10">
       <p class="flex items-center mb-0 !text-3xl">
         {{ formattedTime }}
