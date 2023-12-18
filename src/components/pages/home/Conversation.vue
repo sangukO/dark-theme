@@ -7,6 +7,7 @@
     <!-- <vue-typed-js :strings="['First text', 'Second Text']">
       <p class="typing"></p>
     </vue-typed-js> -->
+    <p class="s1">{{ s1 }}</p>
     <p class="s2">{{ s2 }}</p>
     <p class="s3">{{ s3 }}</p>
   </div>
