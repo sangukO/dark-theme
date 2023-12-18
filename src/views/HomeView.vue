@@ -13,10 +13,10 @@
       />
     </div>
     <div class="images absolute top-[100px]">
-      <img src="@assets/image/Chars.svg" class="w-[calc(40vw+5px)] max-w-[300px]" />
+      <img src="@assets/image/Chars.svg" class="w-[calc(40vw+5px)] max-w-[250px]" />
     </div>
     <div class="images absolute bottom-0 right-0">
-      <img src="@assets/image/Chars1.svg" class="w-[calc(40vw+5px)] max-w-[300px]" />
+      <img src="@assets/image/Chars1.svg" class="w-[calc(40vw+5px)] max-w-[250px]" />
     </div>
     <div class="flex justify-center items-center flex-col h-[calc(100vh-145px)]">
       <Conversation
