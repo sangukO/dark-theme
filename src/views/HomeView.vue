@@ -24,9 +24,11 @@
         :class="darkMode ? 'is-dark' : ''"
       >
         <span class="title !text-[3.2rem] !mt-[-4rem]">음식 추천 봇</span>
-        <p><span ref="s1Ref" class="s1" :class="darkMode"></span></p>
-        <p><span ref="s2Ref" class="s2" :class="darkMode"></span></p>
-        <p><span ref="s3Ref" class="s3" :class="darkMode"></span></p>
+        <p ref="s1Ref" class="s1" :class="darkMode"></p>
+        <br />
+        <p ref="s2Ref" class="s2" :class="darkMode"></p>
+        <br />
+        <p ref="s3Ref" class="s3" :class="darkMode"></p>
       </div>
       <div class="pt-8 h-[50px]">
         <transition name="pick">
