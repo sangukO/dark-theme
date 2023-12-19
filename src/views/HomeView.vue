@@ -24,9 +24,9 @@
         :class="darkMode ? 'is-dark' : ''"
       >
         <span class="title !text-[3.2rem] !mt-[-4rem]">음식 추천 봇</span>
-        <!-- <vue-typed-js v-if="strArr" :strings="strArr">
-          <p class="typing"></p>
-        </vue-typed-js> -->
+        <p>{{ sentence1 }}</p>
+        <p>{{ sentence2 }}</p>
+        <p>{{ sentence3 }}</p>
       </div>
       <div class="pt-8 h-[50px]">
         <transition name="pick">
