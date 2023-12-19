@@ -180,6 +180,7 @@ async function typeText(sentenceRef, sentence) {
 }
 
 async function executeTypeText() {
+  await delay(500)
   await typeText(s1Ref, sentence1.value)
   await typeText(s2Ref, sentence2.value)
   await typeText(s3Ref, sentence3.value)
