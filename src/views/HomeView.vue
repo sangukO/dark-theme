@@ -24,9 +24,9 @@
         :class="darkMode ? 'is-dark' : ''"
       >
         <span class="title !text-[3.2rem] !mt-[-4rem]">음식 추천 봇</span>
-        <p>{{ sentence1 }}</p>
-        <p>{{ sentence2 }}</p>
-        <p>{{ sentence3 }}</p>
+        <p><span ref="s1Ref" class="s1" :class="darkMode"></span></p>
+        <p><span ref="s2Ref" class="s2" :class="darkMode"></span></p>
+        <p><span ref="s3Ref" class="s3" :class="darkMode"></span></p>
       </div>
       <div class="pt-8 h-[50px]">
         <transition name="pick">
@@ -63,7 +63,7 @@
   </main>
 </template>
 <script setup>
-import { ref, onBeforeMount, computed, watch, nextTick } from 'vue'
+import { ref, onBeforeMount, computed, watch, nextTick, onMounted } from 'vue'
 import { useDateFormat, useNow, useTimestamp } from '@vueuse/core'
 // import Conversation from '@components/pages/home/Conversation.vue'
 // import { progress, increment } from '@stores/status.js'
@@ -74,6 +74,9 @@ const now = useTimestamp()
 const nowHMS = computed(() => now.value - todayMidnight.value.setHours(0, 0, 0, 0))
 const picked = ref('')
 const progress = ref(0)
+const s1Ref = ref(null)
+const s2Ref = ref(null)
+const s3Ref = ref(null)
 const wordVariable = computed(() => {
   const cloneNowHMS = nowHMS.value
   if (cloneNowHMS > 0 && cloneNowHMS <= 25200000) {
@@ -98,7 +101,6 @@ const wordVariable = computed(() => {
     return { time: '날', food: '음식' }
   }
 })
-const strArr = ['123', '456', '789']
 
 watch(picked, async (to) => {
   await nextTick()
@@ -108,7 +110,7 @@ watch(picked, async (to) => {
 const sentence1 = computed({
   get() {
     if (progress.value === 0) {
-      return `안녕하세요 좋은 ${wordVariable.value.time}입니다.`
+      return `안녕하세요. 좋은 ${wordVariable.value.time}입니다.`
     } else if (progress.value === 1) {
       return `감사합니다.`
     }
@@ -158,6 +160,39 @@ function savePreference(isDarkMode) {
   localStorage.setItem('isDarkMode', isDarkMode)
 }
 
+async function typeText(sentenceRef, sentence) {
+  const text = ref('')
+  sentenceRef.value.classList.add('blink')
+  return new Promise((resolve) => {
+    for (let i = 0; i < sentence.length; i++) {
+      setTimeout(() => {
+        text.value += sentence[i]
+        sentenceRef.value.textContent = text.value
+        if (i === sentence.length - 1) {
+          setTimeout(() => {
+            sentenceRef.value.classList.add('done')
+            resolve()
+          }, 1000)
+        }
+      }, 100 * i)
+    }
+  })
+}
+
+async function executeTypeText() {
+  await typeText(s1Ref, sentence1.value)
+  await typeText(s2Ref, sentence2.value)
+  await typeText(s3Ref, sentence3.value)
+}
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+onMounted(async () => {
+  executeTypeText()
+})
+
 onBeforeMount(() => {
   darkMode.value = getInitialTheme()
   document.documentElement.setAttribute('color-theme', darkMode.value ? 'dark' : 'light')
@@ -166,5 +201,12 @@ onBeforeMount(() => {
 <style lang="postcss" scoped>
 .pick-leave-active {
   transition-delay: 1500ms;
+}
+.blink {
+  animation: cursor 0.53s step-end infinite;
+}
+
+.done {
+  border: none;
 }
 </style>

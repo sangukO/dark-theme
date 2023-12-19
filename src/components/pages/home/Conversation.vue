@@ -4,9 +4,6 @@
     :class="isDarkMode ? 'is-dark' : ''"
   >
     <span class="title !text-[3.2rem] !mt-[-4rem]">음식 추천 봇</span>
-    <vue-typed-js :strings="strArr">
-      <p class="typing"></p>
-    </vue-typed-js>
     <!-- <p class="s1">{{ s1 }}</p>
     <p class="s2">{{ s2 }}</p>
     <p class="s3">{{ s3 }}</p> -->

@@ -122,3 +122,25 @@ body,
   -khtml-user-select: none;
   user-select: none;
 }
+
+.s1 {
+  @apply inline-block pr-1 border-[var(--main-color)] border-r-[1px];
+}
+
+.s2 {
+  @apply inline-block pr-1 border-[var(--main-color)] border-r-[1px];
+}
+
+.s3 {
+  @apply inline-block pr-1 border-[var(--main-color)] border-r-[1px];
+}
+
+@keyframes cursor {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: var(--main-color);
+  }
+}
