@@ -1,48 +1,36 @@
 <template>
-  <main class="w-[100%] h-[100%] relative">
-    <div class="flex justify-between py-10 px-10">
-      <p class="flex items-center mb-0 !text-3xl">
-        {{ formattedTime }}
-      </p>
-      <input
-        type="checkbox"
-        role="switch"
-        class="toggle-theme"
-        id="toggle-theme"
-        v-model="negatedDarkMode"
-      />
-    </div>
-    <div class="images absolute top-[100px]">
-      <img src="@assets/image/Chars.svg" class="w-[calc(40vw+5px)] max-w-[250px]" />
-    </div>
-    <div class="images absolute bottom-0 right-0">
-      <img src="@assets/image/Chars1.svg" class="w-[calc(40vw+5px)] max-w-[250px]" />
-    </div>
+  <div>
+    <transition name="fade">
+      <div
+        v-if="move"
+        class="absolute !bg-[var(--main-color)] h-[100vh] w-[100vw] z-[10000] top-0 left-0"
+      ></div>
+    </transition>
     <div class="flex justify-center items-center flex-col h-[calc(100vh-145px)]">
       <div
         class="nes-container with-title w-[80%] max-w-[1000px] min-h-[148px]"
-        :class="darkMode ? 'is-dark' : ''"
+        :class="props.isDarkMode ? 'is-dark' : ''"
       >
         <span class="title !text-[3.2rem] !mt-[-4rem]">음식 추천 봇</span>
-        <p ref="s1Ref" class="s1" :class="darkMode"></p>
+        <p ref="s1Ref" class="s1" :class="props.isDarkMode"></p>
         <br />
-        <p ref="s2Ref" class="s2" :class="darkMode"></p>
+        <p ref="s2Ref" class="s2" :class="props.isDarkMode"></p>
         <br />
-        <p ref="s3Ref" class="s3" :class="darkMode"></p>
+        <p ref="s3Ref" class="s3" :class="props.isDarkMode"></p>
       </div>
       <div class="pt-8 h-[50px]">
         <transition name="pick">
-          <div v-if="picked === ''" class="flex gap-x-20">
+          <div v-if="progress == 1 && picked === ''" class="flex gap-x-20">
             <label>
               <input
                 type="radio"
                 class="nes-radio"
-                :class="darkMode ? 'is-dark' : ''"
+                :class="props.isDarkMode ? 'is-dark' : ''"
                 name="answer-dark"
                 value="Y"
                 v-model="picked"
                 :disabled="picked != ''"
-                @click="progress++"
+                @click="pickAnswer('Y')"
               />
               <span>좋아</span>
             </label>
@@ -50,11 +38,12 @@
               <input
                 type="radio"
                 class="nes-radio"
-                :class="darkMode ? 'is-dark' : ''"
+                :class="props.isDarkMode ? 'is-dark' : ''"
                 name="answer-dark"
                 value="N"
                 v-model="picked"
                 :disabled="picked != ''"
+                @click="pickAnswer('N')"
               />
               <span>싫어</span>
             </label>
@@ -62,16 +51,19 @@
         </transition>
       </div>
     </div>
-  </main>
+  </div>
 </template>
 <script setup>
-import { ref, onBeforeMount, computed, watch, nextTick, onMounted } from 'vue'
-import { useDateFormat, useNow, useTimestamp } from '@vueuse/core'
-// import Conversation from '@components/pages/home/Conversation.vue'
-// import { progress, increment } from '@stores/status.js'
-const darkMode = ref(true)
+import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { useTimestamp } from '@vueuse/core'
+const props = defineProps({
+  isDarkMode: {
+    Type: Boolean,
+    required: true
+  }
+})
 const todayMidnight = ref(new Date())
-const formattedTime = useDateFormat(useNow(), 'YYYY-MM-DD HH:mm:ss')
 const now = useTimestamp()
 const nowHMS = computed(() => now.value - todayMidnight.value.setHours(0, 0, 0, 0))
 const picked = ref('')
@@ -79,6 +71,8 @@ const progress = ref(0)
 const s1Ref = ref(null)
 const s2Ref = ref(null)
 const s3Ref = ref(null)
+const router = useRouter()
+const move = ref(false)
 const wordVariable = computed(() => {
   const cloneNowHMS = nowHMS.value
   if (cloneNowHMS > 0 && cloneNowHMS <= 25200000) {
@@ -104,17 +98,14 @@ const wordVariable = computed(() => {
   }
 })
 
-watch(picked, async (to) => {
-  await nextTick()
-  sentence1.value = '감사합니다.'
-})
-
 const sentence1 = computed({
   get() {
     if (progress.value === 0) {
       return `안녕하세요. 좋은 ${wordVariable.value.time}입니다.`
-    } else if (progress.value === 1) {
-      return `감사합니다.`
+    } else if (progress.value === 2) {
+      return `그럼 진행하겠습니다.`
+    } else if (progress.value === 3) {
+      return `알겠습니다.`
     }
   },
   set() {}
@@ -123,9 +114,11 @@ const sentence1 = computed({
 const sentence2 = computed({
   get() {
     if (progress.value === 0) {
-      return `저에게 오세요.`
-    } else if (progress.value === 1) {
-      return `그럼 진행하겠습니다.`
+      return `메뉴가 고민될 땐 저에게 오세요.`
+    } else if (progress.value === 2) {
+      return `저를 따라오세요.`
+    } else if (progress.value === 3) {
+      return `음식 추천 봇이었습니다.`
     }
   },
   set() {}
@@ -135,34 +128,21 @@ const sentence3 = computed({
   get() {
     if (progress.value === 0) {
       return `${wordVariable.value.food} 추천을 해드리겠습니다.`
-    } else if (progress.value === 1) {
-      return `다음 질문을 드리겠습니다.`
+    } else if (progress.value === 2) {
+      return `발 밑을 조심하세요.`
+    } else if (progress.value === 3) {
+      return `다음에 다시 찾아주세요.`
     }
   },
   set() {}
 })
 
-const negatedDarkMode = computed({
-  get: () => !darkMode.value,
-  set: (value) => {
-    darkMode.value = !value
-    savePreference(darkMode.value)
-    document.documentElement.setAttribute('color-theme', darkMode.value ? 'dark' : 'light')
-  }
-})
-
-function getInitialTheme() {
-  if (localStorage.getItem('isDarkMode') === 'false') {
-    return false
-  }
-  return true
-}
-
-function savePreference(isDarkMode) {
-  localStorage.setItem('isDarkMode', isDarkMode)
-}
-
 async function typeText(sentenceRef, sentence) {
+  if (sentence === '') {
+    sentenceRef.value.textContent = ''
+    sentenceRef.value.classList.remove('done')
+    return
+  }
   const text = ref('')
   sentenceRef.value.classList.add('blink')
   return new Promise((resolve) => {
@@ -187,22 +167,51 @@ async function executeTypeText() {
   await typeText(s3Ref, sentence3.value)
 }
 
+async function deleteText() {
+  typeText(s1Ref, '')
+  typeText(s2Ref, '')
+  typeText(s3Ref, '')
+}
+
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-onMounted(async () => {
-  executeTypeText()
-})
+async function pickAnswer(value) {
+  picked.value = value
+  await deleteText()
+  if (picked.value === 'Y') {
+    progress.value = 2
+    await executeTypeText()
+    move.value = true
+    await delay(2000)
+    router.push({
+      name: 'talk',
+      state: {
+        move: true
+      }
+    })
+  } else {
+    progress.value = 3
+    await executeTypeText()
+  }
+}
 
-onBeforeMount(() => {
-  darkMode.value = getInitialTheme()
-  document.documentElement.setAttribute('color-theme', darkMode.value ? 'dark' : 'light')
+onMounted(async () => {
+  await executeTypeText()
+  progress.value++
 })
 </script>
 <style lang="postcss" scoped>
 .pick-leave-active {
   transition-delay: 1500ms;
+}
+.fade-enter-active {
+  transition: opacity 2s ease;
+}
+
+.fade-enter-from {
+  opacity: 0;
 }
 .blink {
   animation: cursor 0.53s step-end infinite;
