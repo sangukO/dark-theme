@@ -14,7 +14,10 @@
         <span class="title !text-[3.2rem] !mt-[-4rem]">음식 추천 봇</span>
         <div class="sentenceDiv">
           <p ref="sRef" class="sentence" :class="props.isDarkMode"></p>
-          <span class="absolute right-8 bottom-5 skipText px-2 nes-pointer" @click="isSkip = true"
+          <span
+            v-if="isLoaded && !isSkip"
+            class="absolute right-8 bottom-5 skipText px-2 nes-pointer"
+            @click="isSkip = true"
             >스킵</span
           >
         </div>
@@ -72,6 +75,7 @@ const progress = ref(0);
 const sRef = ref(null);
 const router = useRouter();
 const move = ref(false);
+const isLoaded = ref(false);
 const isSkip = ref(false);
 const wordVariable = computed(() => {
   const cloneNowHMS = nowHMS.value;
@@ -120,7 +124,7 @@ const sentenceText = computed({
 
 async function skip() {
   sRef.value.textContent = sentenceText.value;
-  await delay(2000);
+  await delay(1000);
   sRef.value.classList.add('done');
 }
 
@@ -189,10 +193,10 @@ async function pickAnswer(value) {
 
 onMounted(async () => {
   await delay(1000);
+  isLoaded.value = true;
   try {
     await executeTypeText();
   } catch (e) {
-    await delay(2000);
     progress.value = 1;
   }
 });
