@@ -54,153 +54,154 @@
   </div>
 </template>
 <script setup>
-import { useRouter } from 'vue-router'
-import { ref, computed, onMounted } from 'vue'
-import { useTimestamp } from '@vueuse/core'
+import { useRouter } from 'vue-router';
+import { ref, computed, onMounted } from 'vue';
+import { useTimestamp } from '@vueuse/core';
 const props = defineProps({
   isDarkMode: {
     Type: Boolean,
     required: true
   }
-})
-const todayMidnight = ref(new Date())
-const now = useTimestamp()
-const nowHMS = computed(() => now.value - todayMidnight.value.setHours(0, 0, 0, 0))
-const picked = ref('')
-const progress = ref(0)
-const s1Ref = ref(null)
-const s2Ref = ref(null)
-const s3Ref = ref(null)
-const router = useRouter()
-const move = ref(false)
+});
+const todayMidnight = ref(new Date());
+const now = useTimestamp();
+const nowHMS = computed(() => now.value - todayMidnight.value.setHours(0, 0, 0, 0));
+const picked = ref('');
+const progress = ref(0);
+const s1Ref = ref(null);
+const s2Ref = ref(null);
+const s3Ref = ref(null);
+const router = useRouter();
+const move = ref(false);
 const wordVariable = computed(() => {
-  const cloneNowHMS = nowHMS.value
+  const cloneNowHMS = nowHMS.value;
   if (cloneNowHMS > 0 && cloneNowHMS <= 25200000) {
     // 0~7
-    return { time: '새벽', food: '야식' }
+    return { time: '새벽', food: '야식' };
   } else if (cloneNowHMS > 25200000 && cloneNowHMS <= 43200000) {
     // 7~12
-    return { time: '아침', food: '아침 식사' }
+    return { time: '아침', food: '아침 식사' };
   } else if (cloneNowHMS > 43200000 && cloneNowHMS <= 50400000) {
     // 12~14
-    return { time: '낮', food: '점심 식사' }
+    return { time: '낮', food: '점심 식사' };
   } else if (cloneNowHMS > 50400000 && cloneNowHMS <= 61200000) {
     // 14~17
-    return { time: '오후', food: '간식' }
+    return { time: '오후', food: '간식' };
   } else if (cloneNowHMS > 61200000 && cloneNowHMS <= 72670000) {
     // 17~21
-    return { time: '저녁', food: '저녁 식사' }
+    return { time: '저녁', food: '저녁 식사' };
   } else if (cloneNowHMS > 75600000 && cloneNowHMS <= 86400000) {
     // 21~0
-    return { time: '밤', food: '야식' }
+    return { time: '밤', food: '야식' };
   } else {
-    return { time: '날', food: '음식' }
+    return { time: '날', food: '음식' };
   }
-})
+});
+// const initQ = `${wordVariable.value.time}에 먹을 ${wordVariable.value.food}에 대해 추천해줘`
 
 const sentence1 = computed({
   get() {
     if (progress.value === 0) {
-      return `안녕하세요. 좋은 ${wordVariable.value.time}입니다.`
+      return `안녕하세요. 좋은 ${wordVariable.value.time}입니다.`;
     } else if (progress.value === 2) {
-      return `그럼 진행하겠습니다.`
+      return `그럼 진행하겠습니다.`;
     } else if (progress.value === 3) {
-      return `알겠습니다.`
+      return `알겠습니다.`;
     }
   },
   set() {}
-})
+});
 
 const sentence2 = computed({
   get() {
     if (progress.value === 0) {
-      return `메뉴가 고민될 땐 저에게 오세요.`
+      return `메뉴가 고민될 땐 저에게 오세요.`;
     } else if (progress.value === 2) {
-      return `저를 따라오세요.`
+      return `저를 따라오세요.`;
     } else if (progress.value === 3) {
-      return `음식 추천 봇이었습니다.`
+      return `음식 추천 봇이었습니다.`;
     }
   },
   set() {}
-})
+});
 
 const sentence3 = computed({
   get() {
     if (progress.value === 0) {
-      return `${wordVariable.value.food} 추천을 해드리겠습니다.`
+      return `${wordVariable.value.food} 추천을 해드리겠습니다.`;
     } else if (progress.value === 2) {
-      return `발 밑을 조심하세요.`
+      return `발 밑을 조심하세요.`;
     } else if (progress.value === 3) {
-      return `다음에 다시 찾아주세요.`
+      return `다음에 다시 찾아주세요.`;
     }
   },
   set() {}
-})
+});
 
 async function typeText(sentenceRef, sentence) {
   if (sentence === '') {
-    sentenceRef.value.textContent = ''
-    sentenceRef.value.classList.remove('done')
-    return
+    sentenceRef.value.textContent = '';
+    sentenceRef.value.classList.remove('done');
+    return;
   }
-  const text = ref('')
-  sentenceRef.value.classList.add('blink')
+  const text = ref('');
+  sentenceRef.value.classList.add('blink');
   return new Promise((resolve) => {
     for (let i = 0; i < sentence.length; i++) {
       setTimeout(() => {
-        text.value += sentence[i]
-        sentenceRef.value.textContent = text.value
+        text.value += sentence[i];
+        sentenceRef.value.textContent = text.value;
         if (i === sentence.length - 1) {
           setTimeout(() => {
-            sentenceRef.value.classList.add('done')
-            resolve()
-          }, 1000)
+            sentenceRef.value.classList.add('done');
+            resolve();
+          }, 1000);
         }
-      }, 100 * i)
+      }, 100 * i);
     }
-  })
+  });
 }
 
 async function executeTypeText() {
-  await typeText(s1Ref, sentence1.value)
-  await typeText(s2Ref, sentence2.value)
-  await typeText(s3Ref, sentence3.value)
+  await typeText(s1Ref, sentence1.value);
+  await typeText(s2Ref, sentence2.value);
+  await typeText(s3Ref, sentence3.value);
 }
 
 async function deleteText() {
-  typeText(s1Ref, '')
-  typeText(s2Ref, '')
-  typeText(s3Ref, '')
+  typeText(s1Ref, '');
+  typeText(s2Ref, '');
+  typeText(s3Ref, '');
 }
 
 function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function pickAnswer(value) {
-  picked.value = value
-  await deleteText()
+  picked.value = value;
+  await deleteText();
   if (picked.value === 'Y') {
-    progress.value = 2
-    await executeTypeText()
-    move.value = true
-    await delay(2000)
+    progress.value = 2;
+    await executeTypeText();
+    move.value = true;
+    await delay(2000);
     router.push({
       name: 'talk',
       state: {
         move: true
       }
-    })
+    });
   } else {
-    progress.value = 3
-    await executeTypeText()
+    progress.value = 3;
+    await executeTypeText();
   }
 }
 
 onMounted(async () => {
-  await executeTypeText()
-  progress.value++
-})
+  await executeTypeText();
+  progress.value++;
+});
 </script>
 <style lang="postcss" scoped>
 .pick-leave-active {

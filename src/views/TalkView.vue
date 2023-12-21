@@ -10,27 +10,20 @@
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router'
-import { onBeforeMount, onMounted, ref } from 'vue'
-const move = ref()
-const route = useRoute()
-onBeforeMount(() => {
-  console.log(move.value)
-
-  move.value = history.state.move
-  console.log(move.value)
-})
+import { useRoute } from 'vue-router';
+import { onBeforeMount, onMounted, ref } from 'vue';
+const move = ref();
+const route = useRoute();
 function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
+onBeforeMount(async () => {
+  console.log(history.state);
+  move.value = history.state.move;
+});
 onMounted(async () => {
-  console.log(move.value)
-
-  await delay(2000)
-  move.value = false
-  console.log(move.value)
-})
-// const initQ = `${wordVariable.value.time}에 먹을 ${wordVariable.value.food}에 대해 추천해줘`
+  move.value = false;
+});
 </script>
 
 <style lang="postcss" scoped>
