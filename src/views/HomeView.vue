@@ -8,15 +8,13 @@
     </transition>
     <div class="flex justify-center items-center flex-col h-[calc(100vh-145px)]">
       <div
-        class="nes-container with-title w-[80%] max-w-[1000px] min-h-[148px]"
+        class="nes-container with-title w-[85%] max-w-[1000px] min-h-[162px]"
         :class="props.isDarkMode ? 'is-dark' : ''"
       >
         <span class="title !text-[3.2rem] !mt-[-4rem]">음식 추천 봇</span>
-        <p ref="s1Ref" class="s1" :class="props.isDarkMode"></p>
-        <br />
-        <p ref="s2Ref" class="s2" :class="props.isDarkMode"></p>
-        <br />
-        <p ref="s3Ref" class="s3" :class="props.isDarkMode"></p>
+        <div class="sentenceDiv">
+          <p ref="sRef" class="sentence" :class="props.isDarkMode"></p>
+        </div>
       </div>
       <div class="pt-8 h-[50px]">
         <transition name="pick">
@@ -68,9 +66,7 @@ const now = useTimestamp();
 const nowHMS = computed(() => now.value - todayMidnight.value.setHours(0, 0, 0, 0));
 const picked = ref('');
 const progress = ref(0);
-const s1Ref = ref(null);
-const s2Ref = ref(null);
-const s3Ref = ref(null);
+const sRef = ref(null);
 const router = useRouter();
 const move = ref(false);
 const wordVariable = computed(() => {
@@ -99,40 +95,20 @@ const wordVariable = computed(() => {
 });
 // const initQ = `${wordVariable.value.time}에 먹을 ${wordVariable.value.food}에 대해 추천해줘`
 
-const sentence1 = computed({
+const sentence = computed({
   get() {
     if (progress.value === 0) {
-      return `안녕하세요. 좋은 ${wordVariable.value.time}입니다.`;
+      return `안녕하세요. 좋은 ${wordVariable.value.time}입니다.
+        메뉴가 고민될 땐 저에게 오세요.
+        ${wordVariable.value.food} 추천을 해드리겠습니다.`;
     } else if (progress.value === 2) {
-      return `그럼 진행하겠습니다.`;
+      return `그럼 진행하겠습니다.
+        저를 따라오세요.
+        발 밑을 조심하세요.`;
     } else if (progress.value === 3) {
-      return `알겠습니다.`;
-    }
-  },
-  set() {}
-});
-
-const sentence2 = computed({
-  get() {
-    if (progress.value === 0) {
-      return `메뉴가 고민될 땐 저에게 오세요.`;
-    } else if (progress.value === 2) {
-      return `저를 따라오세요.`;
-    } else if (progress.value === 3) {
-      return `음식 추천 봇이었습니다.`;
-    }
-  },
-  set() {}
-});
-
-const sentence3 = computed({
-  get() {
-    if (progress.value === 0) {
-      return `${wordVariable.value.food} 추천을 해드리겠습니다.`;
-    } else if (progress.value === 2) {
-      return `발 밑을 조심하세요.`;
-    } else if (progress.value === 3) {
-      return `다음에 다시 찾아주세요.`;
+      return `알겠습니다.
+        음식 추천 봇이었습니다.
+        다음에 다시 찾아주세요.`;
     }
   },
   set() {}
@@ -163,15 +139,11 @@ async function typeText(sentenceRef, sentence) {
 }
 
 async function executeTypeText() {
-  await typeText(s1Ref, sentence1.value);
-  await typeText(s2Ref, sentence2.value);
-  await typeText(s3Ref, sentence3.value);
+  await typeText(sRef, sentence.value);
 }
 
 async function deleteText() {
-  typeText(s1Ref, '');
-  typeText(s2Ref, '');
-  typeText(s3Ref, '');
+  typeText(sRef, '');
 }
 
 function delay(ms) {
@@ -213,12 +185,5 @@ onMounted(async () => {
 
 .fade-enter-from {
   opacity: 0;
-}
-.blink {
-  animation: cursor 0.53s step-end infinite;
-}
-
-.done {
-  border: none;
 }
 </style>
