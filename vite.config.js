@@ -9,6 +9,7 @@ const resolveAlias = Object.fromEntries(
   Object.entries({
     '@components': './src/components',
     '@pages': './src/pages',
+    '@views': './src/views',
     '@router': './src/router',
     '@stores': './src/stores',
     '@utils': './src/utils',

@@ -123,24 +123,33 @@ body,
   user-select: none;
 }
 
-.s1 {
-  @apply inline-block pr-1 border-[var(--main-color)] border-r-[1px];
+.sentenceDiv {
+  white-space: pre-line;
 }
 
-.s2 {
-  @apply inline-block pr-1 border-[var(--main-color)] border-r-[1px];
+.sentenceDiv p.sentence:last-child::after {
+  -webkit-animation: blink 1s infinite;
+  animation: blink 1s infinite;
+  content: '▋';
+  color: var(--main-color);
+  margin-left: 0.25rem;
+  vertical-align: baseline;
 }
 
-.s3 {
-  @apply inline-block pr-1 border-[var(--main-color)] border-r-[1px];
+p.sentence.done:last-child::after {
+  display: none;
 }
 
-@keyframes cursor {
+.sentence {
+  @apply inline-block leading-loose;
+}
+
+@keyframes blink {
   from,
   to {
-    border-color: transparent;
+    opacity: 1;
   }
   50% {
-    border-color: var(--main-color);
+    opacity: 1;
   }
 }
