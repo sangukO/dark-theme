@@ -15,7 +15,7 @@
         <div class="sentenceDiv">
           <p ref="sRef" class="sentence" :class="props.isDarkMode"></p>
           <span
-            v-if="isLoaded && !isSkip"
+            v-if="isLoaded && !isSkip && progress !== 1"
             class="absolute right-8 bottom-5 skipText px-2 nes-pointer"
             @click="isSkip = true"
             >스킵</span
@@ -160,11 +160,11 @@ async function typeText(sentenceRef, sentence) {
 }
 
 async function executeTypeText() {
-  await typeText(sRef, sentenceText.value, false);
+  await typeText(sRef, sentenceText.value);
 }
 
 async function deleteText() {
-  typeText(sRef, '', true);
+  typeText(sRef, '');
 }
 
 function delay(ms) {
@@ -197,6 +197,7 @@ onMounted(async () => {
   try {
     await executeTypeText();
   } catch (e) {
+  } finally {
     progress.value = 1;
   }
 });
