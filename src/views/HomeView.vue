@@ -122,6 +122,7 @@ async function typeText(sentenceRef, sentence) {
   }
   const text = ref('');
   sentenceRef.value.classList.add('blink');
+
   return new Promise((resolve) => {
     for (let i = 0; i < sentence.length; i++) {
       setTimeout(() => {
@@ -133,7 +134,7 @@ async function typeText(sentenceRef, sentence) {
             resolve();
           }, 1000);
         }
-      }, 100 * i);
+      }, 120 * i);
     }
   });
 }
