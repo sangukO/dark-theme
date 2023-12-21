@@ -7,7 +7,7 @@
       <input
         type="checkbox"
         role="switch"
-        class="toggle-theme"
+        class="toggle-theme nes-pointer"
         id="toggle-theme"
         v-model="negatedDarkMode"
       />
@@ -23,36 +23,36 @@
 </template>
 
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import { ref, onBeforeMount, computed } from 'vue'
-import { useDateFormat, useNow } from '@vueuse/core'
-const darkMode = ref(true)
-const formattedTime = useDateFormat(useNow(), 'YYYY-MM-DD HH:mm:ss')
+import { RouterLink, RouterView } from 'vue-router';
+import { ref, onBeforeMount, computed } from 'vue';
+import { useDateFormat, useNow } from '@vueuse/core';
+const darkMode = ref(true);
+const formattedTime = useDateFormat(useNow(), 'YYYY-MM-DD HH:mm:ss');
 
 const negatedDarkMode = computed({
   get: () => !darkMode.value,
   set: (value) => {
-    darkMode.value = !value
-    savePreference(darkMode.value)
-    document.documentElement.setAttribute('color-theme', darkMode.value ? 'dark' : 'light')
+    darkMode.value = !value;
+    savePreference(darkMode.value);
+    document.documentElement.setAttribute('color-theme', darkMode.value ? 'dark' : 'light');
   }
-})
+});
 
 function getInitialTheme() {
   if (localStorage.getItem('isDarkMode') === 'false') {
-    return false
+    return false;
   }
-  return true
+  return true;
 }
 
 function savePreference(isDarkMode) {
-  localStorage.setItem('isDarkMode', isDarkMode)
+  localStorage.setItem('isDarkMode', isDarkMode);
 }
 
 onBeforeMount(() => {
-  darkMode.value = getInitialTheme()
-  document.documentElement.setAttribute('color-theme', darkMode.value ? 'dark' : 'light')
-})
+  darkMode.value = getInitialTheme();
+  document.documentElement.setAttribute('color-theme', darkMode.value ? 'dark' : 'light');
+});
 </script>
 
 <style scoped></style>

@@ -66,10 +66,6 @@ body,
 }
 
 .toggle-theme {
-  cursor:
-    url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC)
-      14 0,
-    pointer;
   appearance: none;
   position: relative;
   border-image-slice: 2;
@@ -127,7 +123,7 @@ body,
   white-space: pre-line;
 }
 
-.sentenceDiv p.sentence:last-child::after {
+.sentenceDiv p.sentence:first-child::after {
   -webkit-animation: blink 1s infinite;
   animation: blink 1s infinite;
   content: '▋';
@@ -136,7 +132,7 @@ body,
   vertical-align: baseline;
 }
 
-p.sentence.done:last-child::after {
+p.sentence.done:first-child::after {
   display: none;
 }
 
@@ -152,4 +148,8 @@ p.sentence.done:last-child::after {
   50% {
     opacity: 1;
   }
+}
+
+.skipText {
+  background: linear-gradient(to bottom, transparent 50%, #bb86fc 100%);
 }

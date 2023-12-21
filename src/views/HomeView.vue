@@ -8,12 +8,15 @@
     </transition>
     <div class="flex justify-center items-center flex-col h-[calc(100vh-145px)]">
       <div
-        class="nes-container with-title w-[85%] max-w-[1000px] min-h-[162px]"
+        class="nes-container with-title w-[82%] max-w-[1000px] min-h-[175px]"
         :class="props.isDarkMode ? 'is-dark' : ''"
       >
         <span class="title !text-[3.2rem] !mt-[-4rem]">음식 추천 봇</span>
         <div class="sentenceDiv">
           <p ref="sRef" class="sentence" :class="props.isDarkMode"></p>
+          <span class="absolute right-8 bottom-5 skipText px-2 nes-pointer" @click="isSkip = true"
+            >스킵</span
+          >
         </div>
       </div>
       <div class="pt-8 h-[50px]">
@@ -53,7 +56,7 @@
 </template>
 <script setup>
 import { useRouter } from 'vue-router';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useTimestamp } from '@vueuse/core';
 const props = defineProps({
   isDarkMode: {
@@ -69,6 +72,7 @@ const progress = ref(0);
 const sRef = ref(null);
 const router = useRouter();
 const move = ref(false);
+const isSkip = ref(false);
 const wordVariable = computed(() => {
   const cloneNowHMS = nowHMS.value;
   if (cloneNowHMS > 0 && cloneNowHMS <= 25200000) {
@@ -95,9 +99,9 @@ const wordVariable = computed(() => {
 });
 // const initQ = `${wordVariable.value.time}에 먹을 ${wordVariable.value.food}에 대해 추천해줘`
 
-const sentence = computed({
+const sentenceText = computed({
   get() {
-    if (progress.value === 0) {
+    if (progress.value === 0 || progress.value === 1) {
       return `안녕하세요. 좋은 ${wordVariable.value.time}입니다.
         메뉴가 고민될 땐 저에게 오세요.
         ${wordVariable.value.food} 추천을 해드리겠습니다.`;
@@ -114,25 +118,37 @@ const sentence = computed({
   set() {}
 });
 
+async function skip() {
+  sRef.value.textContent = sentenceText.value;
+  await delay(2000);
+  sRef.value.classList.add('done');
+}
+
 async function typeText(sentenceRef, sentence) {
   if (sentence === '') {
     sentenceRef.value.textContent = '';
     sentenceRef.value.classList.remove('done');
     return;
   }
+
   const text = ref('');
   sentenceRef.value.classList.add('blink');
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     for (let i = 0; i < sentence.length; i++) {
       setTimeout(() => {
-        text.value += sentence[i];
-        sentenceRef.value.textContent = text.value;
-        if (i === sentence.length - 1) {
-          setTimeout(() => {
-            sentenceRef.value.classList.add('done');
-            resolve();
-          }, 1000);
+        if (!isSkip.value) {
+          text.value += sentence[i];
+          sentenceRef.value.textContent = text.value;
+          if (i === sentence.length - 1) {
+            setTimeout(() => {
+              sentenceRef.value.classList.add('done');
+              resolve();
+            }, 1000);
+          }
+        } else {
+          skip();
+          reject('123');
         }
       }, 120 * i);
     }
@@ -140,11 +156,11 @@ async function typeText(sentenceRef, sentence) {
 }
 
 async function executeTypeText() {
-  await typeText(sRef, sentence.value);
+  await typeText(sRef, sentenceText.value, false);
 }
 
 async function deleteText() {
-  typeText(sRef, '');
+  typeText(sRef, '', true);
 }
 
 function delay(ms) {
@@ -172,8 +188,13 @@ async function pickAnswer(value) {
 }
 
 onMounted(async () => {
-  await executeTypeText();
-  progress.value++;
+  await delay(1000);
+  try {
+    await executeTypeText();
+  } catch (e) {
+    await delay(2000);
+    progress.value = 1;
+  }
 });
 </script>
 <style lang="postcss" scoped>
