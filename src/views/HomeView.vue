@@ -179,15 +179,20 @@ async function pickAnswer(value) {
   await deleteText();
   if (picked.value === 'Y') {
     progress.value = 2;
-    await executeTypeText();
-    move.value = true;
-    await delay(2000);
-    router.push({
-      name: 'talk',
-      state: {
-        move: true
-      }
-    });
+    try {
+      await executeTypeText();
+    } catch (e) {
+      timers.forEach(clearTimeout);
+    } finally {
+      move.value = true;
+      await delay(2000);
+      router.push({
+        name: 'talk',
+        state: {
+          move: true
+        }
+      });
+    }
   } else {
     progress.value = 3;
     await executeTypeText();
