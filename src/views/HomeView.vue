@@ -122,10 +122,13 @@ const sentenceText = computed({
   set() {}
 });
 
+let timers = [];
+
 async function skip() {
   sRef.value.textContent = sentenceText.value;
   await delay(1000);
   sRef.value.classList.add('done');
+  isSkip.value = false;
 }
 
 async function typeText(sentenceRef, sentence) {
@@ -137,10 +140,9 @@ async function typeText(sentenceRef, sentence) {
 
   const text = ref('');
   sentenceRef.value.classList.add('blink');
-
   return new Promise((resolve, reject) => {
     for (let i = 0; i < sentence.length; i++) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         if (!isSkip.value) {
           text.value += sentence[i];
           sentenceRef.value.textContent = text.value;
@@ -151,10 +153,11 @@ async function typeText(sentenceRef, sentence) {
             }, 1000);
           }
         } else {
+          reject();
           skip();
-          reject('123');
         }
       }, 120 * i);
+      timers.push(timer);
     }
   });
 }
@@ -188,6 +191,7 @@ async function pickAnswer(value) {
   } else {
     progress.value = 3;
     await executeTypeText();
+    isSkip.value = true;
   }
 }
 
@@ -197,6 +201,7 @@ onMounted(async () => {
   try {
     await executeTypeText();
   } catch (e) {
+    timers.forEach(clearTimeout);
   } finally {
     progress.value = 1;
   }
