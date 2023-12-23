@@ -195,8 +195,13 @@ async function pickAnswer(value) {
     }
   } else {
     progress.value = 3;
-    await executeTypeText();
-    isSkip.value = true;
+    try {
+      await executeTypeText();
+    } catch (e) {
+      timers.forEach(clearTimeout);
+    } finally {
+      isSkip.value = true;
+    }
   }
 }
 
