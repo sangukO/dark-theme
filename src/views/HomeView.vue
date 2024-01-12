@@ -14,12 +14,6 @@
         <span class="title !text-[3.2rem] !mt-[-4rem]">음식 추천 봇</span>
         <div class="sentenceDiv">
           <p ref="sRef" class="sentence" :class="props.isDarkMode"></p>
-          <span
-            v-if="isLoaded && !isSkip && progress !== 1"
-            class="absolute right-8 bottom-5 skipText px-2 nes-pointer"
-            @click="isSkip = true"
-            >스킵</span
-          >
         </div>
       </div>
       <div class="pt-8 h-[50px]">
@@ -156,7 +150,7 @@ async function typeText(sentenceRef, sentence) {
           reject();
           skip();
         }
-      }, 120 * i);
+      }, 120 * i); //120 기준
       timers.push(timer);
     }
   });
